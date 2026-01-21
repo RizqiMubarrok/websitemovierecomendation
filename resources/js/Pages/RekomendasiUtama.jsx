@@ -29,16 +29,23 @@ export default function RekomendasiUtama() {
         medium: [],
         low: [],
     });
-    const [mounted, setMounted] = useState(false);
+    // initialMounted controls one-time UI animations (titles, mood buttons)
+    const [initialMounted, setInitialMounted] = useState(false);
+    // cardsMounted controls only the movie cards entrance animation
+    const [cardsMounted, setCardsMounted] = useState(false);
 
     useEffect(() => {
+        // trigger one-time UI animation on first load
+        const t = setTimeout(() => setInitialMounted(true), 60);
         fetchRecommendations();
+        return () => clearTimeout(t);
     }, [selectedMood, page]);
 
     const fetchRecommendations = async () => {
         try {
             setLoading(true);
-            setMounted(false);
+            // only animate cards when changing pages or mood
+            setCardsMounted(false);
             // Fetch starting page from server
             const result = await apiClient.getRecommendations(
                 selectedMood,
@@ -84,8 +91,8 @@ export default function RekomendasiUtama() {
             // Trim to exactly 7 items (or fewer if not enough available)
             const finalList = prioritized.slice(0, 7);
             setMovies(finalList);
-            // trigger entrance animation after movies are set
-            setTimeout(() => setMounted(true), 60);
+            // trigger entrance animation for cards after movies are set
+            setTimeout(() => setCardsMounted(true), 60);
             setPagination(serverPagination);
         } catch (error) {
             console.error("Error fetching recommendations:", error);
@@ -137,7 +144,7 @@ export default function RekomendasiUtama() {
             <div className="max-w-8xl w-full mx-auto px-4 sm:px-12 lg:px-30 pt-4 pb-16">
                 <h2
                     className={`text-3xl font-medium text-black mb-4 transform transition-all duration-600 ease-out ${
-                        mounted
+                        initialMounted
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 -translate-y-3"
                     }`}
@@ -151,7 +158,7 @@ export default function RekomendasiUtama() {
                     <div className="flex items-center justify-between">
                         <h3
                             className={`text-lg font-reguler text-black transform transition-all duration-500 ease-out ${
-                                mounted
+                                initialMounted
                                     ? "opacity-100 translate-y-0"
                                     : "opacity-0 -translate-y-2"
                             }`}
@@ -167,7 +174,7 @@ export default function RekomendasiUtama() {
                                 onClick={() => handleMoodChange(mood)}
                                 style={{ transitionDelay: `${idx * 70}ms` }}
                                 className={`flex-shrink-0 w-32 flex items-center justify-center px-4 py-2 rounded-full font-medium transform transition-all duration-400 ease-out ${
-                                    mounted
+                                    initialMounted
                                         ? "opacity-100 translate-y-0"
                                         : "opacity-0 translate-y-2"
                                 } ${
@@ -198,7 +205,7 @@ export default function RekomendasiUtama() {
                                 {movies.map((movie, idx) => (
                                     <div
                                         key={movie.id}
-                                        className={`flex-shrink-0 transform transition-all duration-500 ease-out ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                                        className={`flex-shrink-0 transform transition-all duration-500 ease-out ${cardsMounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
                                         style={{
                                             width: 200,
                                             transitionDelay: `${idx * 80}ms`,
@@ -224,11 +231,18 @@ export default function RekomendasiUtama() {
                             </div>
                         )}
                         {pagination.total_pages > 1 && (
-                            <Pagination
-                                currentPage={pagination.current_page}
-                                totalPages={pagination.total_pages}
-                                onPageChange={setPage}
-                            />
+                            <div
+                                className={`flex items-center justify-center mt-6 transform transition-all duration-500 ease-out ${cardsMounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                                style={{
+                                    transitionDelay: `${movies.length * 60}ms`,
+                                }}
+                            >
+                                <Pagination
+                                    currentPage={pagination.current_page}
+                                    totalPages={pagination.total_pages}
+                                    onPageChange={setPage}
+                                />
+                            </div>
                         )}
 
                         {selectedMovieId && (
