@@ -7,6 +7,7 @@ export default function Dashboard() {
     const [movies, setMovies] = useState([]);
     const [genres, setGenres] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         fetchMoviesAndGenres();
@@ -15,6 +16,7 @@ export default function Dashboard() {
     const fetchMoviesAndGenres = async () => {
         try {
             setLoading(true);
+            setMounted(false);
             // Fetch both movies and genres in parallel
             const genresResult = await apiClient.getGenres();
 
@@ -117,6 +119,8 @@ export default function Dashboard() {
                 if (unique.length >= 4) break;
             }
             setMovies(unique.slice(0, 4));
+            // trigger animation after movies are set
+            setTimeout(() => setMounted(true), 60);
         } catch (error) {
             console.error("Error fetching data:", error);
             setMovies([]);
@@ -161,12 +165,22 @@ export default function Dashboard() {
     return (
         <div className="min-h-screen bg-white">
             <div className="max-w-8xl w-full mx-auto px-4 sm:px-12 lg:px-19 pt-4 pb-16">
-                <h1 className="text-4xl md:text-4xl font-medium text-black mb-4 text-center">
+                <h1
+                    className={`text-4xl md:text-4xl font-medium text-black mb-4 text-center transform transition-all duration-700 ease-out ${
+                        mounted
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 -translate-y-4"
+                    }`}
+                >
                     Pilihan Film Terbaik yang
                     <br />
                     <span className="block mt-2">
                         Direkomendasikan
-                        <span className="inline-block bg-[#BC4F51] text-white rounded-full px-4 py-0 ml-3 text-4xl md:text-4xl font-medium">
+                        <span
+                            className={`inline-block bg-[#BC4F51] text-white rounded-full px-4 py-0 ml-3 text-4xl md:text-4xl font-medium transform transition-transform duration-700 ease-out ${
+                                mounted ? "scale-100" : "scale-90"
+                            }`}
+                        >
                             Moodflix
                         </span>
                     </span>
@@ -181,14 +195,19 @@ export default function Dashboard() {
                 ) : (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 mt-8">
-                            {movies.map((movie) => (
-                                <MovieCard
+                            {movies.map((movie, idx) => (
+                                <div
                                     key={movie.id}
-                                    movie={movie}
-                                    genres={genres}
-                                    onInteraction={handleMovieInteraction}
-                                    onOpen={openMovieModal}
-                                />
+                                    className={`transform transition-all duration-500 ease-out ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                                    style={{ transitionDelay: `${idx * 80}ms` }}
+                                >
+                                    <MovieCard
+                                        movie={movie}
+                                        genres={genres}
+                                        onInteraction={handleMovieInteraction}
+                                        onOpen={openMovieModal}
+                                    />
+                                </div>
                             ))}
                         </div>
 
