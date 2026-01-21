@@ -29,6 +29,7 @@ export default function RekomendasiUtama() {
         medium: [],
         low: [],
     });
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         fetchRecommendations();
@@ -37,6 +38,7 @@ export default function RekomendasiUtama() {
     const fetchRecommendations = async () => {
         try {
             setLoading(true);
+            setMounted(false);
             // Fetch starting page from server
             const result = await apiClient.getRecommendations(
                 selectedMood,
@@ -80,7 +82,10 @@ export default function RekomendasiUtama() {
             ];
 
             // Trim to exactly 7 items (or fewer if not enough available)
-            setMovies(prioritized.slice(0, 7));
+            const finalList = prioritized.slice(0, 7);
+            setMovies(finalList);
+            // trigger entrance animation after movies are set
+            setTimeout(() => setMounted(true), 60);
             setPagination(serverPagination);
         } catch (error) {
             console.error("Error fetching recommendations:", error);
@@ -173,11 +178,14 @@ export default function RekomendasiUtama() {
                     <>
                         <div className="mt-8">
                             <div className="flex gap-4 overflow-x-auto overflow-y-visible pb-6 pt-2 items-start">
-                                {movies.map((movie) => (
+                                {movies.map((movie, idx) => (
                                     <div
                                         key={movie.id}
-                                        className="flex-shrink-0"
-                                        style={{ width: 200 }}
+                                        className={`flex-shrink-0 transform transition-all duration-500 ease-out ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                                        style={{
+                                            width: 200,
+                                            transitionDelay: `${idx * 80}ms`,
+                                        }}
                                     >
                                         <FeaturedMovieCard
                                             movie={movie}

@@ -24,7 +24,7 @@ export default function FeaturedMovieCard({ movie, onInteraction, onOpen }) {
     return (
         <div
             onClick={handleCardClick}
-            className="rounded-xl cursor-pointer transform hover:scale-95 duration-300 p-1"
+            className="rounded-xl cursor-pointer group p-3"
             style={{
                 backgroundColor: "#EAEAEA",
                 maxWidth: "335px",
@@ -35,7 +35,7 @@ export default function FeaturedMovieCard({ movie, onInteraction, onOpen }) {
                 <img
                     src={poster}
                     alt={movie.title}
-                    className="w-full h-full object-cover block rounded-lg"
+                    className="w-full h-full object-cover block rounded-lg transition-transform duration-500 ease-out transform group-hover:scale-105"
                     onClick={handlePosterClick}
                     role="button"
                 />
