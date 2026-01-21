@@ -34,7 +34,7 @@ export default function MovieCard({
     return (
         <div
             onClick={handleClick}
-            className="rounded-xl cursor-pointer transform hover:scale-105 duration-300 p-5"
+            className="rounded-xl cursor-pointer group p-5 transform transition-shadow duration-300"
             style={{
                 backgroundColor: "#EAEAEA",
                 maxWidth: "335px",
@@ -45,7 +45,7 @@ export default function MovieCard({
                 <img
                     src={posterPath}
                     alt={movie.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     onClick={handlePosterClick}
                     role="button"
                 />
