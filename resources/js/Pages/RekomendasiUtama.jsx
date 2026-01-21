@@ -135,7 +135,13 @@ export default function RekomendasiUtama() {
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-8xl w-full mx-auto px-4 sm:px-12 lg:px-30 pt-4 pb-16">
-                <h2 className="text-3xl font-medium text-black mb-4">
+                <h2
+                    className={`text-3xl font-medium text-black mb-4 transform transition-all duration-600 ease-out ${
+                        mounted
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 -translate-y-3"
+                    }`}
+                >
                     Rekomendasi film yang ingin ditonton sesuai{" "}
                     <span className="text-[#BC4F51] font-semibold"> Mood</span>
                 </h2>
@@ -143,17 +149,28 @@ export default function RekomendasiUtama() {
                 {/* Mood Selection (horizontal scroll bar) */}
                 <div className="mb-6">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-reguler text-black">
+                        <h3
+                            className={`text-lg font-reguler text-black transform transition-all duration-500 ease-out ${
+                                mounted
+                                    ? "opacity-100 translate-y-0"
+                                    : "opacity-0 -translate-y-2"
+                            }`}
+                        >
                             Pilih Mood Anda:
                         </h3>
                     </div>
 
                     <div className="mt-2 flex space-x-4 overflow-x-auto py-1">
-                        {moods.map((mood) => (
+                        {moods.map((mood, idx) => (
                             <button
                                 key={mood}
                                 onClick={() => handleMoodChange(mood)}
-                                className={`flex-shrink-0 w-32 flex items-center justify-center px-4 py-2 rounded-full font-medium transition ${
+                                style={{ transitionDelay: `${idx * 70}ms` }}
+                                className={`flex-shrink-0 w-32 flex items-center justify-center px-4 py-2 rounded-full font-medium transform transition-all duration-400 ease-out ${
+                                    mounted
+                                        ? "opacity-100 translate-y-0"
+                                        : "opacity-0 translate-y-2"
+                                } ${
                                     selectedMood === mood
                                         ? "bg-[#BC4F51] text-white"
                                         : "bg-white text-black border-2 border-black hover:border-[#000000]"
