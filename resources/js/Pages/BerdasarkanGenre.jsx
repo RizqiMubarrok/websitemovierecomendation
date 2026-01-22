@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import FeaturedMovieCard from "../Components/FeaturedMovieCard";
 import MovieModal from "../Components/MovieModal";
 import GenrePill from "../Components/GenrePill";
-import FilterDropdown from "../Components/FilterDropdown";
 import Pagination from "../Components/Pagination";
 import { apiClient } from "../utils/apiClient";
 
@@ -347,45 +346,7 @@ export default function BerdasarkanGenre() {
                             Terbaru
                         </button>
 
-                        <div className="relative">
-                            <button
-                                onClick={() => setShowYearDropdown((s) => !s)}
-                                style={{
-                                    transitionDelay: initialMounted
-                                        ? "200ms"
-                                        : "0ms",
-                                }}
-                                className={`flex-shrink-0 w-40 flex items-center justify-center px-4 py-2 rounded-full font-medium transition-all duration-350 ease-out ${
-                                    showYearDropdown || selectedYear
-                                        ? "bg-[#BC4F51] text-white scale-100"
-                                        : "bg-white text-gray-900 border-2 border-black scale-95"
-                                }`}
-                            >
-                                {selectedYear ? String(selectedYear) : "Tahun"}
-                            </button>
-
-                            {showYearDropdown && (
-                                <div className="absolute left-0 mt-2 z-20">
-                                    <FilterDropdown
-                                        options={Array.from({ length: 46 }).map(
-                                            (_, i) => {
-                                                const y = 2025 - i;
-                                                return {
-                                                    label: String(y),
-                                                    value: String(y),
-                                                };
-                                            },
-                                        )}
-                                        value={selectedYear || ""}
-                                        onChange={(v) => {
-                                            setSelectedYear(v || null);
-                                            setShowYearDropdown(false);
-                                            setPage(1);
-                                        }}
-                                    />
-                                </div>
-                            )}
-                        </div>
+                        {/* Year filter removed */}
                     </div>
                 </div>
 
