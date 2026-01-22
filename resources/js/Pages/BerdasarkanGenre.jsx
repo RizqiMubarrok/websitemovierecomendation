@@ -27,10 +27,21 @@ export default function BerdasarkanGenre() {
     const [selectedYear, setSelectedYear] = useState(null);
     const [showYearDropdown, setShowYearDropdown] = useState(false);
 
+    // initialMounted controls one-time UI animations (title, pills, sort buttons)
+    const [initialMounted, setInitialMounted] = useState(false);
+    // cardsMounted controls entrance animation for movie cards and pagination
+    const [cardsMounted, setCardsMounted] = useState(false);
+
     const pillRowRef = useRef(null);
 
     useEffect(() => {
         fetchGenres();
+    }, []);
+
+    // trigger one-time UI animations on mount
+    useEffect(() => {
+        const t = setTimeout(() => setInitialMounted(true), 60);
+        return () => clearTimeout(t);
     }, []);
 
     useEffect(() => {
@@ -54,6 +65,8 @@ export default function BerdasarkanGenre() {
     const fetchMovies = async () => {
         try {
             setLoading(true);
+            // prepare card entrance animation
+            setCardsMounted(false);
             const result = await apiClient.getMoviesByGenre(
                 selectedGenres,
                 sortBy,
@@ -68,6 +81,8 @@ export default function BerdasarkanGenre() {
                 });
             }
             setMovies(items);
+            // trigger entrance animation after movies set
+            setTimeout(() => setCardsMounted(true), 60);
             setPagination(result.pagination || {});
         } catch (error) {
             console.error("Error fetching movies:", error);
@@ -149,12 +164,16 @@ export default function BerdasarkanGenre() {
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-8xl w-full mx-auto px-4 sm:px-12 lg:px-30 pt-4 pb-16">
-                <h2 className="text-lg font-reguler text-black">
+                <h2
+                    className={`text-lg font-reguler text-black transform transition-all duration-600 ease-out ${initialMounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3"}`}
+                >
                     Kategori Film
                 </h2>
 
                 {/* Genre Pills (horizontal, pill buttons with left/right controls) */}
-                <div className="mb-6 relative">
+                <div
+                    className={`mb-6 relative transform transition-all duration-500 ease-out ${initialMounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3"}`}
+                >
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
                         <button
                             onClick={() => {
@@ -205,8 +224,9 @@ export default function BerdasarkanGenre() {
                             className="flex gap-4 overflow-x-auto py-1 scrollbar-hidden snap-x snap-mandatory"
                             style={{ scrollBehavior: "smooth" }}
                         >
-                            {genres.map((genre) => {
+                            {genres.map((genre, idx) => {
                                 const isVisible = !!visibleMap[genre.id];
+                                const shown = initialMounted && isVisible;
                                 return (
                                     <button
                                         key={genre.id}
@@ -214,10 +234,10 @@ export default function BerdasarkanGenre() {
                                         onClick={() =>
                                             handleGenreClick(genre.id)
                                         }
-                                        className={`snap-start flex items-center justify-center px-4 py-2 rounded-full font-medium transition-transform duration-300 ease-out ${
-                                            isVisible
-                                                ? "opacity-100 translate-y-0"
-                                                : "opacity-0 -translate-y-2"
+                                        className={`snap-start flex items-center justify-center px-4 py-2 rounded-full font-medium transition-all duration-350 ease-out ${
+                                            shown
+                                                ? "opacity-100 translate-y-0 scale-100"
+                                                : "opacity-0 -translate-y-2 scale-95"
                                         } ${
                                             selectedGenres.includes(genre.id)
                                                 ? "bg-[#BC4F51] text-white"
@@ -225,6 +245,8 @@ export default function BerdasarkanGenre() {
                                         }`}
                                         style={{
                                             flex: "0 0 calc((100% - 7rem) / 8)",
+                                            transitionDelay: `${60 + idx * 40}ms`,
+                                            willChange: "transform, opacity",
                                         }}
                                     >
                                         {genre.name}
@@ -277,7 +299,9 @@ export default function BerdasarkanGenre() {
                 </div>
 
                 {/* Sort Filter (three buttons: Populer, Terbaru, Tahun) */}
-                <div className="mb-2">
+                <div
+                    className={`mb-2 transform transition-all duration-500 ease-out ${initialMounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3"}`}
+                >
                     <span className="text-lg font-reguler text-black">
                         Sort by:
                     </span>
@@ -289,10 +313,15 @@ export default function BerdasarkanGenre() {
                                 setShowYearDropdown(false);
                                 setSelectedYear(null);
                             }}
-                            className={`flex-shrink-0 w-40 flex items-center justify-center px-4 py-2 rounded-full font-medium transition ${
+                            style={{
+                                transitionDelay: initialMounted
+                                    ? "80ms"
+                                    : "0ms",
+                            }}
+                            className={`flex-shrink-0 w-40 flex items-center justify-center px-4 py-2 rounded-full font-medium transition-all duration-350 ease-out ${
                                 sortBy === "popularity.desc"
-                                    ? "bg-[#BC4F51] text-white"
-                                    : "bg-white text-gray-900 border-2 border-black"
+                                    ? "bg-[#BC4F51] text-white scale-100"
+                                    : "bg-white text-gray-900 border-2 border-black scale-95"
                             }`}
                         >
                             Populer
@@ -304,10 +333,15 @@ export default function BerdasarkanGenre() {
                                 setShowYearDropdown(false);
                                 setSelectedYear(null);
                             }}
-                            className={`flex-shrink-0 w-40 flex items-center justify-center px-4 py-2 rounded-full font-medium transition ${
+                            style={{
+                                transitionDelay: initialMounted
+                                    ? "140ms"
+                                    : "0ms",
+                            }}
+                            className={`flex-shrink-0 w-40 flex items-center justify-center px-4 py-2 rounded-full font-medium transition-all duration-350 ease-out ${
                                 sortBy === "primary_release_date.desc"
-                                    ? "bg-[#BC4F51] text-white"
-                                    : "bg-white text-gray-900 border-2 border-black"
+                                    ? "bg-[#BC4F51] text-white scale-100"
+                                    : "bg-white text-gray-900 border-2 border-black scale-95"
                             }`}
                         >
                             Terbaru
@@ -316,10 +350,15 @@ export default function BerdasarkanGenre() {
                         <div className="relative">
                             <button
                                 onClick={() => setShowYearDropdown((s) => !s)}
-                                className={`flex-shrink-0 w-40 flex items-center justify-center px-4 py-2 rounded-full font-medium transition ${
+                                style={{
+                                    transitionDelay: initialMounted
+                                        ? "200ms"
+                                        : "0ms",
+                                }}
+                                className={`flex-shrink-0 w-40 flex items-center justify-center px-4 py-2 rounded-full font-medium transition-all duration-350 ease-out ${
                                     showYearDropdown || selectedYear
-                                        ? "bg-[#BC4F51] text-white"
-                                        : "bg-white text-gray-900 border-2 border-black"
+                                        ? "bg-[#BC4F51] text-white scale-100"
+                                        : "bg-white text-gray-900 border-2 border-black scale-95"
                                 }`}
                             >
                                 {selectedYear ? String(selectedYear) : "Tahun"}
@@ -361,11 +400,15 @@ export default function BerdasarkanGenre() {
                     <>
                         <div className="mt-6">
                             <div className="flex gap-4 overflow-x-auto overflow-y-visible pb-3 pt-4 items-start">
-                                {movies.map((movie) => (
+                                {movies.map((movie, idx) => (
                                     <div
                                         key={movie.id}
-                                        className="flex-shrink-0"
-                                        style={{ width: 200 }}
+                                        className={`flex-shrink-0 origin-top transform transition-all duration-500 ease-out ${cardsMounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"}`}
+                                        style={{
+                                            width: 200,
+                                            transitionDelay: `${idx * 70}ms`,
+                                            willChange: "transform, opacity",
+                                        }}
                                     >
                                         <FeaturedMovieCard
                                             movie={movie}
@@ -388,11 +431,19 @@ export default function BerdasarkanGenre() {
                         )}
 
                         {pagination.total_pages > 1 && (
-                            <Pagination
-                                currentPage={pagination.current_page}
-                                totalPages={pagination.total_pages}
-                                onPageChange={setPage}
-                            />
+                            <div
+                                className={`flex items-center justify-center mt-1 transform transition-all duration-450 ease-out ${cardsMounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"}`}
+                                style={{
+                                    transitionDelay: `${movies.length * 60 + 120}ms`,
+                                    willChange: "transform, opacity",
+                                }}
+                            >
+                                <Pagination
+                                    currentPage={pagination.current_page}
+                                    totalPages={pagination.total_pages}
+                                    onPageChange={setPage}
+                                />
+                            </div>
                         )}
 
                         {selectedMovieId && (
