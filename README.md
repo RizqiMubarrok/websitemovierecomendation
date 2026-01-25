@@ -1,160 +1,152 @@
-# 🎬 Moodflix — Aplikasi Rekomendasi Film
+# 🎬 Moodflix — Dokumentasi Proyek
 
-Moodflix adalah aplikasi single-page (SPA) berbasis **Laravel + Inertia.js (React)** yang menyediakan rekomendasi film dengan mengombinasikan metadata dari **TMDB** dan layanan **AI free-text (DeepSeek)**. Antarmuka pengguna dibangun menggunakan **Tailwind CSS** dan dibundel dengan **Vite**.
-
-Aplikasi ini dirancang sebagai front-end rekomendasi film yang ringan, interaktif, dan responsif.
+Dokumentasi ini menjelaskan struktur, arsitektur, alur kerja, dan instruksi menjalankan proyek berdasarkan analisis kode sumber yang ada. Semua informasi ditulis sesuai kode di repository — tidak menambahkan fitur yang tidak ada.
 
 ---
 
-## ✨ Fitur Utama
+## Deskripsi Singkat
 
-- **Rekomendasi berbasis mood**
-  Rekomendasi berdasarkan mood pengguna menggunakan algoritma ringan di sisi klien.
-
-- **Penjelajahan berdasarkan genre**
-  Navigasi genre menggunakan kontrol pil horizontal.
-
-- **Film AI (AI Free-text Recommendation)**
-  Input teks bebas untuk mendapatkan rekomendasi film dari layanan DeepSeek.
-
-- **Pencarian cepat & detail film**
-  Modal pencarian cepat dan tampilan detail film tanpa berpindah halaman.
+Moodflix adalah aplikasi single-page (SPA) front-end untuk rekomendasi film. Aplikasi menggabungkan metadata dari TMDB dan rekomendasi berbasis teks bebas melalui layanan AI eksternal (DeepSeek), dengan fokus pada UX interaktif: rekomendasi berdasarkan mood, penjelajahan genre, halaman Film AI untuk kueri teks, serta modal pencarian dan detail film.
 
 ---
 
-## 🖼️ Screenshot
+## Latar Belakang / Tujuan
 
-### Dashboard
-
-![Dashboard](resources/UI/Halaman_Dashboard.png)
-
-### Rekomendasi Utama
-
-![Rekomendasi Utama](resources/UI/Halaman_RekomendasiUtama.png)
-
-### Berdasarkan Genre
-
-![Berdasarkan Genre](resources/UI/Halaman_BerdasarkanGenre.png)
-
-### Film AI
-
-![Film AI](resources/UI/Halaman_FilmAI.png)
+Tujuan proyek ini adalah menyediakan antarmuka yang memungkinkan pengguna menemukan film sesuai preferensi (mood/genre/teks) dengan cara yang mudah dan interaktif. Proyek juga berfungsi sebagai demonstrasi integrasi beberapa API eksternal (TMDB dan layanan AI), serta teknik caching dan client-side scoring sederhana untuk rekomendasi.
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## Fitur Utama (sesuai kode)
 
-**Backend**
+- Rekomendasi berbasis mood (client-side scoring) — implemented di `resources/js/utils/moodRecommender.js` dan dipakai di `resources/js/Pages/RekomendasiUtama.jsx`.
+- Penjelajahan berdasarkan genre dengan pil horizontal (`resources/js/Pages/BerdasarkanGenre.jsx`).
+- Film AI: halaman input teks bebas yang memanggil endpoint proxy server (`POST /api/recommendations/deepseek`) untuk mendapatkan saran dari DeepSeek (`resources/js/Pages/FilmAI.jsx`).
+- Dashboard: kumpulan film unggulan (pilihan berdasarkan genre/popularitas) (`resources/js/Pages/Dashboard.jsx`).
+- Pencarian cepat dan tampilan detail film melalui modal (`resources/js/Components/SearchInput.jsx`, `MovieModal.jsx`).
+- Perekaman interaksi pengguna (model `UserMovieInteraction`) melalui API `POST /api/recommendations/interaction`.
+- Animasi/transition UI berbasis Tailwind (mount flags seperti `initialMounted` dan `cardsMounted`).
 
-- PHP 8.x
-- Laravel
-
-**Frontend**
-
-- Inertia.js
-- React
-- Vite
-- Tailwind CSS
-
-**Integrasi Eksternal**
-
-- TMDB API (metadata film)
-- DeepSeek API (AI free-text)
+> Catatan: tidak ada implementasi server-side rendering yang khusus—front-end berjalan sebagai SPA React (lihat `resources/js/app.jsx` yang memakai `react-router`).
 
 ---
 
-## 📁 Struktur Proyek (Ringkas)
+## Tampilan Aplikasi (Screenshots)
 
-resources/
-├── js/
-│ ├── Pages/ # Halaman utama (Dashboard, FilmAI, dll.)
-│ ├── Components/ # Komponen reusable
-│ └── utils/ # Utilitas (mood recommender)
-├── UI/ # Screenshot dokumentasi
-app/
-├── Http/Controllers/ # Controller Laravel
-└── Services/
-└── TMDBService.php
+Gambar disimpan di `resources/UI`. Berikut daftar gambar sesuai fungsinya:
 
----
+- **Dashboard** — `resources/UI/Halaman_Dashboard.png`
+    - Tampilan kartu film unggulan (4 kartu), dipakai sebagai ringkasan pilihan.
 
-## 🚀 Menjalankan Proyek Secara Lokal
+- **Rekomendasi Utama** — `resources/UI/Halaman_RekomendasiUtama.png`
+    - Baris horizontal kartu film yang diprioritaskan berdasarkan mood terpilih; ada pil mood di atas untuk memilih kategori mood.
 
-### Prasyarat
+- **Berdasarkan Genre** — `resources/UI/Halaman_BerdasarkanGenre.png`
+    - Pil genre horizontal dengan kontrol scroll kiri/kanan; daftar film muncul di area bawah.
 
-- PHP 8.x
-- Composer
-- Node.js 16+ (npm atau yarn)
-- Database (opsional, MySQL)
+- **Film AI** — `resources/UI/Halaman_FilmAI.png`
+    - Halaman dengan area input teks besar (textarea) untuk kueri free-text; hasil (output AI) muncul di bawah input.
+
+Gunakan gambar-gambar ini untuk verifikasi tampilan saat menjalankan aplikasi secara lokal.
 
 ---
 
-### Langkah singkat
+## Teknologi yang Digunakan
 
-1. Install dependensi backend
+- Backend: PHP 8.x, Laravel 10
+- Frontend: React 18, React Router (SPA), Vite
+- Styling: Tailwind CSS
+- HTTP: `fetch` dan `axios` (axios diinisialisasi di `resources/js/bootstrap.js`)
+- Dependency management: Composer (PHP), npm (JS)
+- Integrasi eksternal:
+    - TMDB (metadata film) — helper `app/Services/TMDBService.php` melakukan panggilan ke TMDB.
+    - DeepSeek (AI free-text) — dipanggil melalui proxy server di `RecommendationController::deepseekQuery()`.
 
-```bash
+---
+
+## Struktur Folder (ringkas & relevan)
+
+- `app/`
+    - `Http/Controllers/RecommendationController.php` — endpoint rekomendasi, proxy DeepSeek, record interaction.
+    - `Services/TMDBService.php` — helper untuk memanggil TMDB (popular, genres, search, details).
+    - `Models/Genre.php`, `Models/UserMovieInteraction.php` — model data.
+
+- `routes/api.php` — semua API route untuk frontend (`/movies/*`, `/recommendations/*`).
+
+- `resources/js/`
+    - `app.jsx` — entry SPA (React Router).
+    - `Pages/` — `Dashboard.jsx`, `RekomendasiUtama.jsx`, `BerdasarkanGenre.jsx`, `FilmAI.jsx`.
+    - `Components/` — `SearchInput.jsx`, `MovieCard.jsx`, `FeaturedMovieCard.jsx`, `MovieModal.jsx`, `Modal.jsx`, `Pagination.jsx`, dll.
+    - `utils/` — `apiClient.js` (wrapper untuk `/api/`), `moodRecommender.js` (scoring logic).
+
+- `resources/UI/` — screenshot dokumentasi.
+- `database/migrations/` — skema `genres` dan `user_movie_interactions`.
+
+---
+
+## Cara Menjalankan Project (step-by-step)
+
+Langkah berikut mengasumsikan Anda bekerja di mesin pengembangan lokal.
+
+1. Install dependensi PHP
+
+```powershell
 composer install
 ```
 
-2. Install dependensi frontend dan jalankan build
+2. Install dependensi JS dan jalankan dev server Vite
 
-```bash
+```powershell
 npm install
 npm run dev
 ```
 
 3. Konfigurasi environment
 
-Salin `.env.example` menjadi `.env` dan tambahkan variabel yang diperlukan, misalnya:
+- Salin `.env.example` menjadi `.env` jika belum ada.
+- Tambahkan atau perbarui variabel berikut (contoh):
 
 ```dotenv
+# TMDB (direkomendasikan dipindahkan dari kode ke ENV jika Anda ingin aman)
 TMDB_API_KEY=your_tmdb_api_key
+
+# DeepSeek
 DEEPSEEK_API_URL=https://api.deepseek.com/v1/query
 DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-Catatan:
+> Penting: `DEEPSEEK_API_URL` harus mengarah ke endpoint penerima POST yang benar (bukan sekadar domain root). Jika API provider mengharuskan path khusus, isi path tersebut.
 
-- Pastikan `DEEPSEEK_API_URL` mengarah ke endpoint lengkap (bukan hanya domain root). Jika salah, proxy dapat mengembalikan 404 atau respon kosong.
-- Jangan pernah meng-commit API key ke repository publik.
+4. (Opsional) Generate key dan migrasi database
 
-4. (Opsional) Generate application key & jalankan migrasi
-
-```bash
+```powershell
 php artisan key:generate
 php artisan migrate
 ```
 
-5. Jalankan server lokal
+5. Jalankan server Laravel
 
-```bash
+```powershell
 php artisan serve
 ```
 
-Buka aplikasi di: http://127.0.0.1:8000 dan buka halaman Film AI untuk menguji input teks bebas.
+6. Buka browser di `http://127.0.0.1:8000` dan navigasi ke halaman yang relevan:
+
+- `/` — dashboard
+- `/rekomendasi-utama` — rekomendasi berdasarkan mood
+- `/berdasarkan-genre` — jelajah genre
+- `/film-ai` — input teks AI
 
 ---
 
-## 🤖 Film AI — Alur Kerja
+## Catatan Tambahan & Keterbatasan (jujur)
 
-- Pada halaman Film AI, `SearchInput` mengirimkan kueri teks ke endpoint proxy server:
+- **DeepSeek payload**: Proxy server mengirim JSON `{ q: "<teks>" }` ke `DEEPSEEK_API_URL`. Jika penyedia DeepSeek mengharuskan nama parameter lain (mis. `prompt`), controller perlu disesuaikan.
 
-```
-POST /api/recommendations/deepseek
-```
+- **TMDBService**: `app/Services/TMDBService.php` menyimpan token di kode sumber. Untuk keamanan, pindahkan kunci ini ke file `.env` dan baca via `env('TMDB_API_KEY')`.
 
-- Endpoint proxy (`RecommendationController::deepseekQuery`) meneruskan permintaan ke `DEEPSEEK_API_URL` menggunakan header `Authorization: Bearer <DEEPSEEK_API_KEY>` sehingga kunci tetap aman di sisi server.
+- **Inertia vs React Router**: Composer mendaftarkan paket Inertia, tetapi frontend menggunakan `react-router`. Aplikasi berjalan sebagai SPA React.
 
----
-
-## 🧪 Troubleshooting
-
-- Jika hasil AI kosong atau terjadi error:
-    - Pastikan `DEEPSEEK_API_URL` sudah benar dan lengkap.
-    - Pastikan `DEEPSEEK_API_KEY` valid.
-
-- Uji endpoint proxy secara manual (contoh):
+- **Pengujian AI**: Jika hasil AI kosong, jalankan uji manual terhadap proxy untuk melihat status/respon upstream. Contoh:
 
 ```bash
 curl -i -X POST http://127.0.0.1:8000/api/recommendations/deepseek \
@@ -164,26 +156,16 @@ curl -i -X POST http://127.0.0.1:8000/api/recommendations/deepseek \
 
 ---
 
-## 🧩 Catatan Pengembang
+## Rencana Perbaikan / Pengembangan yang Direkomendasikan
 
-- Logika rekomendasi berbasis mood: `resources/js/utils/moodRecommender.js`
-- Animasi UI dan logic mount ada di: `resources/js/Pages`
-
----
-
-## 🤝 Kontribusi
-
-- Buka issue terlebih dahulu untuk mendiskusikan perubahan.
-- Sertakan screenshot jika perubahan berkaitan dengan UI.
-- Gunakan commit kecil dan deskriptif.
+- Pindahkan credential TMDB ke `.env` dan ubah `TMDBService` agar menggunakan `env()`.
+- Sesuaikan payload proxy DeepSeek sesuai dokumentasi layanan.
+- Tambahkan parsing respons DeepSeek di server agar frontend menerima format teks yang konsisten.
+- Tambahkan test unit/integrasi untuk `moodRecommender` dan endpoint proxy DeepSeek.
 
 ---
 
-## 📄 Lisensi
-
-Proyek ini mengikuti lisensi paket yang digunakan dan ketentuan layanan API pihak ketiga (TMDB dan DeepSeek).
-
----
+Jika Anda ingin, saya dapat langsung memperbaiki `TMDBService` agar membaca `TMDB_API_KEY` dari `.env`, atau menyesuaikan payload proxy DeepSeek jika Anda memberikan dokumentasi API DeepSeek (contoh request/response).
 
 ```
 
