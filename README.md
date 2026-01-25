@@ -1,124 +1,190 @@
-## FilmAI — Aplikasi Rekomendasi Film
+# 🎬 Moodflix — Aplikasi Rekomendasi Film
 
-Proyek ini adalah aplikasi single-page berbasis Laravel + Inertia/React yang memberikan rekomendasi film menggunakan kombinasi metadata TMDB dan layanan AI free-text (DeepSeek). Antarmuka dibuat dengan Tailwind CSS dan dibundel memakai Vite. Aplikasi dirancang sebagai front-end rekomendasi film ringan dengan mode penelusuran berikut:
+Moodflix adalah aplikasi single-page (SPA) berbasis **Laravel + Inertia.js (React)** yang menyediakan rekomendasi film dengan mengombinasikan metadata dari **TMDB** dan layanan **AI free-text (DeepSeek)**. Antarmuka pengguna dibangun menggunakan **Tailwind CSS** dan dibundel dengan **Vite**.
 
-- Rekomendasi utama berbasis mood (algoritma mood di sisi klien + kartu unggulan).
-- Penjelajahan berdasarkan genre dengan kontrol pil horizontal.
-- Film AI: input teks bebas yang mengirim kueri ke layanan DeepSeek untuk mendapat saran atau rekomendasi.
-- Pencarian cepat (modal) dan tampilan detail film (MovieModal).
+Aplikasi ini dirancang sebagai front-end rekomendasi film yang ringan, interaktif, dan responsif.
 
-Di bawah ini terdapat dokumentasi singkat, petunjuk menjalankan secara lokal, dan screenshot yang ada pada folder `resources/UI`.
+---
 
-### Screenshot
+## ✨ Fitur Utama
 
-- Dashboard
+- **Rekomendasi berbasis mood**
+  Rekomendasi berdasarkan mood pengguna menggunakan algoritma ringan di sisi klien.
+
+- **Penjelajahan berdasarkan genre**
+  Navigasi genre menggunakan kontrol pil horizontal.
+
+- **Film AI (AI Free-text Recommendation)**
+  Input teks bebas untuk mendapatkan rekomendasi film dari layanan DeepSeek.
+
+- **Pencarian cepat & detail film**
+  Modal pencarian cepat dan tampilan detail film tanpa berpindah halaman.
+
+---
+
+## 🖼️ Screenshot
+
+### Dashboard
 
 ![Dashboard](resources/UI/Halaman_Dashboard.png)
 
-- Rekomendasi Utama
+### Rekomendasi Utama
 
 ![Rekomendasi Utama](resources/UI/Halaman_RekomendasiUtama.png)
 
-- Berdasarkan Genre
+### Berdasarkan Genre
 
 ![Berdasarkan Genre](resources/UI/Halaman_BerdasarkanGenre.png)
 
-- Film AI (halaman input teks)
+### Film AI
 
 ![Film AI](resources/UI/Halaman_FilmAI.png)
 
-### Teknologi
+---
 
-- Backend: PHP 8.x, Laravel
-- Frontend: Inertia.js + React, Vite, Tailwind CSS
-- Integrasi eksternal: TMDB (untuk metadata film), DeepSeek (AI free-text)
+## 🛠️ Teknologi yang Digunakan
 
-### Struktur proyek (intinya)
+**Backend**
 
-- `resources/js/Pages` — halaman React utama (`FilmAI`, `RekomendasiUtama`, `BerdasarkanGenre`, `Dashboard`).
-- `resources/js/Components` — komponen yang dapat digunakan ulang (`SearchInput`, `MovieCard`, `Modal`, `MovieModal`, dll.).
-- `app/Http/Controllers` — controller Laravel untuk route API.
-- `app/Services/TMDBService.php` — helper integrasi TMDB.
-- `resources/UI` — screenshot yang dipakai dokumentasi ini.
+- PHP 8.x
+- Laravel
 
-## Menjalankan secara lokal (pengembangan)
+**Frontend**
 
-Persiapan: PHP 8.x, Composer, Node 16+/npm atau Yarn, (opsional) MySQL.
+- Inertia.js
+- React
+- Vite
+- Tailwind CSS
 
-1. Install dependensi PHP:
+**Integrasi Eksternal**
 
-```powershell
+- TMDB API (metadata film)
+- DeepSeek API (AI free-text)
+
+---
+
+## 📁 Struktur Proyek (Ringkas)
+
+resources/
+├── js/
+│ ├── Pages/ # Halaman utama (Dashboard, FilmAI, dll.)
+│ ├── Components/ # Komponen reusable
+│ └── utils/ # Utilitas (mood recommender)
+├── UI/ # Screenshot dokumentasi
+app/
+├── Http/Controllers/ # Controller Laravel
+└── Services/
+└── TMDBService.php
+
+---
+
+## 🚀 Menjalankan Proyek Secara Lokal
+
+### Prasyarat
+
+- PHP 8.x
+- Composer
+- Node.js 16+ (npm atau yarn)
+- Database (opsional, MySQL)
+
+---
+
+### Langkah singkat
+
+1. Install dependensi backend
+
+```bash
 composer install
 ```
 
-2. Install dependensi JS dan build aset:
+2. Install dependensi frontend dan jalankan build
 
-```powershell
+```bash
 npm install
 npm run dev
 ```
 
 3. Konfigurasi environment
 
-Salin `.env.example` menjadi `.env` dan atur variabel penting. Contoh yang diperlukan untuk fitur AI:
+Salin `.env.example` menjadi `.env` dan tambahkan variabel yang diperlukan, misalnya:
 
 ```dotenv
-# Endpoint DeepSeek (pastikan berisi path endpoint, mis. /v1/query jika diperlukan)
-DEEPSEEK_API_URL=https://api.deepseek.com/v1/query
-DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# TMDB API key untuk metadata film
 TMDB_API_KEY=your_tmdb_api_key
+DEEPSEEK_API_URL=https://api.deepseek.com/v1/query
+DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 Catatan:
 
-- Pastikan `DEEPSEEK_API_URL` menunjuk ke endpoint lengkap yang menerima POST JSON. Jika hanya diberikan domain root tanpa path, sering mengakibatkan respon kosong atau 404.
-- Jangan pernah meng-commit `DEEPSEEK_API_KEY` atau kunci sensitif lainnya.
+- Pastikan `DEEPSEEK_API_URL` mengarah ke endpoint lengkap (bukan hanya domain root). Jika salah, proxy dapat mengembalikan 404 atau respon kosong.
+- Jangan pernah meng-commit API key ke repository publik.
 
-4. Generate aplikasi key dan jalankan migrasi (opsional jika menggunakan database):
+4. (Opsional) Generate application key & jalankan migrasi
 
-```powershell
+```bash
 php artisan key:generate
 php artisan migrate
 ```
 
-5. Jalankan server lokal:
+5. Jalankan server lokal
 
-```powershell
+```bash
 php artisan serve
 ```
 
-Buka `http://127.0.0.1:8000` lalu buka halaman Film AI untuk menguji input teks bebas.
+Buka aplikasi di: http://127.0.0.1:8000 dan buka halaman Film AI untuk menguji input teks bebas.
 
-## Film AI — cara kerja singkat
+---
 
-- Pada halaman Film AI, `SearchInput` mengirim kueri teks ke endpoint proxy server: `POST /api/recommendations/deepseek`.
-- Endpoint proxy ada di `RecommendationController::deepseekQuery()` dan meneruskan (forward) permintaan ke `DEEPSEEK_API_URL` menggunakan header `Authorization: Bearer <DEEPSEEK_API_KEY>` sehingga kunci tetap aman di server.
-- Jika layanan upstream mengembalikan error, proxy membalas dengan `status` dan potongan `body` (truncated) untuk membantu debugging tanpa menampilkan kunci.
+## 🤖 Film AI — Alur Kerja
 
-## Troubleshooting singkat
+- Pada halaman Film AI, `SearchInput` mengirimkan kueri teks ke endpoint proxy server:
 
-- Hasil AI kosong: Periksa apakah `DEEPSEEK_API_URL` sudah benar termasuk path yang diperlukan (mis. `/v1/query`) dan pastikan `DEEPSEEK_API_KEY` valid.
-- Uji proxy langsung dengan `curl` untuk melihat respon mentah dari layanan DeepSeek:
+```
+POST /api/recommendations/deepseek
+```
+
+- Endpoint proxy (`RecommendationController::deepseekQuery`) meneruskan permintaan ke `DEEPSEEK_API_URL` menggunakan header `Authorization: Bearer <DEEPSEEK_API_KEY>` sehingga kunci tetap aman di sisi server.
+
+---
+
+## 🧪 Troubleshooting
+
+- Jika hasil AI kosong atau terjadi error:
+    - Pastikan `DEEPSEEK_API_URL` sudah benar dan lengkap.
+    - Pastikan `DEEPSEEK_API_KEY` valid.
+
+- Uji endpoint proxy secara manual (contoh):
 
 ```bash
 curl -i -X POST http://127.0.0.1:8000/api/recommendations/deepseek \
-	-H "Content-Type: application/json" \
-	-d '{"q":"cari film komedi romantis terbaru"}'
+  -H "Content-Type: application/json" \
+  -d '{"q":"cari film komedi romantis terbaru"}'
 ```
 
-Jika respon berisi `success: false` dan `status`/`body`, gunakan informasi tersebut untuk menyesuaikan URL atau format permintaan ke DeepSeek.
+---
 
-## Catatan pengembang
+## 🧩 Catatan Pengembang
 
-- Animasi UI dan mount logic ada di `resources/js/Pages` (mis. variabel `initialMounted` untuk animasi satu-kali pada load).
-- Logika rekomendasi berbasis mood berada di `resources/js/utils/moodRecommender.js`.
+- Logika rekomendasi berbasis mood: `resources/js/utils/moodRecommender.js`
+- Animasi UI dan logic mount ada di: `resources/js/Pages`
 
-## Kontribusi
+---
 
-Jika ingin berkontribusi, buka issue terlebih dahulu dan sertakan screenshot untuk perubahan UI. Buat commit kecil dan deskriptif.
+## 🤝 Kontribusi
 
-## Lisensi
+- Buka issue terlebih dahulu untuk mendiskusikan perubahan.
+- Sertakan screenshot jika perubahan berkaitan dengan UI.
+- Gunakan commit kecil dan deskriptif.
 
-Ikuti lisensi paket yang digunakan oleh proyek serta ketentuan layanan API pihak ketiga.
+---
+
+## 📄 Lisensi
+
+Proyek ini mengikuti lisensi paket yang digunakan dan ketentuan layanan API pihak ketiga (TMDB dan DeepSeek).
+
+---
+
+```
+
+```
