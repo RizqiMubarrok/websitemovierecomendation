@@ -1,6 +1,6 @@
-# 🎬 FilmAI — Aplikasi Rekomendasi Film
+# 🎬 Moodflix — Aplikasi Rekomendasi Film
 
-FilmAI adalah aplikasi single-page (SPA) berbasis **Laravel + Inertia.js (React)** yang menyediakan rekomendasi film dengan mengombinasikan metadata dari **TMDB** dan layanan **AI free-text (DeepSeek)**. Antarmuka pengguna dibangun menggunakan **Tailwind CSS** dan dibundel dengan **Vite**.
+Moodflix adalah aplikasi single-page (SPA) berbasis **Laravel + Inertia.js (React)** yang menyediakan rekomendasi film dengan mengombinasikan metadata dari **TMDB** dan layanan **AI free-text (DeepSeek)**. Antarmuka pengguna dibangun menggunakan **Tailwind CSS** dan dibundel dengan **Vite**.
 
 Aplikasi ini dirancang sebagai front-end rekomendasi film yang ringan, interaktif, dan responsif.
 
