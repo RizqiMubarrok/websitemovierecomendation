@@ -11,6 +11,10 @@ Di bawah ini terdapat dokumentasi singkat, petunjuk menjalankan secara lokal, da
 
 ### Screenshot
 
+- Dashboard
+
+![Dashboard](resources/UI/Halaman_Dashboard.png)
+
 - Rekomendasi Utama
 
 ![Rekomendasi Utama](resources/UI/Halaman_RekomendasiUtama.png)
@@ -22,10 +26,6 @@ Di bawah ini terdapat dokumentasi singkat, petunjuk menjalankan secara lokal, da
 - Film AI (halaman input teks)
 
 ![Film AI](resources/UI/Halaman_FilmAI.png)
-
-- Dashboard
-
-![Dashboard](resources/UI/Halaman_Dashboard.png)
 
 ### Teknologi
 
