@@ -43,17 +43,35 @@ Catatan: Aplikasi berjalan sepenuhnya sebagai SPA React menggunakan react-router
 
 Gambar disimpan di `resources/UI`. Berikut daftar gambar sesuai fungsinya:
 
-- **Dashboard** — `resources/UI/Halaman_Dashboard.png`
-    - Tampilan kartu film unggulan (4 kartu), dipakai sebagai ringkasan pilihan.
+### Dashboard
 
-- **Rekomendasi Utama** — `resources/UI/Halaman_RekomendasiUtama.png`
-    - Baris horizontal kartu film yang diprioritaskan berdasarkan mood terpilih; ada pil mood di atas untuk memilih kategori mood.
+![Dashboard](resources/UI/Halaman_Dashboard.png)
 
-- **Berdasarkan Genre** — `resources/UI/Halaman_BerdasarkanGenre.png`
-    - Pil genre horizontal dengan kontrol scroll kiri/kanan; daftar film muncul di area bawah.
+Tampilan kartu film unggulan (4 kartu), dipakai sebagai ringkasan pilihan.
 
-- **Film AI** — `resources/UI/Halaman_FilmAI.png`
-    - Halaman dengan area input teks besar (textarea) untuk kueri free-text.
+---
+
+### Rekomendasi Utama
+
+![Rekomendasi Utama](resources/UI/Halaman_RekomendasiUtama.png)
+
+Baris horizontal kartu film yang diprioritaskan berdasarkan mood terpilih.
+
+---
+
+### Berdasarkan Genre
+
+![Berdasarkan Genre](resources/UI/Halaman_BerdasarkanGenre.png)
+
+Pil genre horizontal dengan kontrol scroll kiri/kanan.
+
+---
+
+### Film AI
+
+![Film AI](resources/UI/Halaman_FilmAI.png)
+
+Halaman dengan area input teks besar (textarea).
 
 Gunakan gambar-gambar ini untuk verifikasi tampilan saat menjalankan aplikasi secara lokal.
 
